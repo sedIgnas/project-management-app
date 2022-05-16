@@ -20,7 +20,7 @@ class StudentFactory extends Factory
             'first_name' => $this->faker->firstName(),
             'last_name' => $this->faker->lastName(),
             'in_group' => $this->faker->boolean(),
-            'group_id'=> rand(1, 10)
+            'group_id'=> '1'
         ];
     }
 }

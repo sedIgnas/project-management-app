@@ -18,7 +18,7 @@ class GroupFactory extends Factory
     {
         return [
             'name' => 'Group#'.rand(1,10),
-            'project_id' => rand(1, 10)
+            'project_id' => '1',
         ];
     }
 }
