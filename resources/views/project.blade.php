@@ -17,21 +17,24 @@
 </head>
 
 <body>
-    {{-- main page container --}}
-    <div class="container">
+  {{-- main page container --}}
+  <div class="container">
+    @if($test === true)
+    <form action=""></form>
+    @else
 
         {{-- Project overview --}}
         <div class="m-5">
             <h4>Project status</h4>
             <div class="ml-3">
-                <p>Project: <strong>--project.name--</strong></p>
-                <p>Number of groups: --group_count--</p>
-                <p>Students per group: --group_size</p>
+                <p>Project name: <span class="font-weight-bold">{{ $project->first()->name }}</span></p>
+                <p>Number of groups: <span class="font-weight-bold">{{ $groupCount }}</span></p>
+                <p>Students per group: <span class="font-weight-bold">--from-input--</span></p>
             </div>
         </div>
 
         {{-- Students table --}}
-        <div class="w-75 m-auto ">
+        <div class="w-75 m-auto">
             <table class="table text-center">
                 <thead>
                     <tr>
@@ -41,26 +44,19 @@
                     </tr>
                 </thead>
                 <tbody>
+                  @foreach($students as $student)
                     <tr>
-                        <td>Student 1</td>
-                        <td>Group 1</td>
+                        <td>{{ $student->first_name }} {{ $student->last_name }}</td>
+                        <td>
+                          @if($student->in_group === 1)
+                            {{ $student->group->name }}
+                          @else
+                            -
+                          @endif
+                        </td>
                         <td>Delete</td>
                     </tr>
-                    <tr>
-                        <td>Student 2</td>
-                        <td>Group 2</td>
-                        <td>Delete</td>
-                    </tr>
-                    <tr>
-                        <td>Student 3</td>
-                        <td> - </td> {{-- ingroup? group : '-' --}}
-                        <td>Delete</td>
-                    </tr>
-                    <tr>
-                        <td>Student 4</td>
-                        <td>Group 2</td>
-                        <td>Delete</td>
-                    </tr>
+                  @endforeach
                 </tbody>
             </table>
             <div class="btn btn-light">Add new student</div>
@@ -134,10 +130,10 @@
                     </tr>
                 </tbody>
             </table>
+          </div>
         </div>
-        </div>
+        @endif
     </div>
-    
 </body>
 
 </html>
