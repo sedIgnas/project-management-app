@@ -13,10 +13,16 @@ class Group extends Model
 
     public $timestamps = false;
 
+
     protected $fillable = [
       'name',
       'student_id'
     ];
+
+    public function initializeGroups($groupCount)
+    {
+      Group::factory($groupCount)->create();
+    }
 
     public function students()
     {
