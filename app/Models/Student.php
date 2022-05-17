@@ -18,6 +18,12 @@ class Student extends Model
       'group_id'
     ];
 
+    public function initializeStudents($groupSize, $groupCount)
+    {
+      $studentCount = $groupSize * $groupCount;
+      Student::factory($studentCount)->create();
+    }
+
     public function group()
     {
       return $this->belongsTo(Group::class);
