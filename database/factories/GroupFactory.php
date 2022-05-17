@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\Project;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -9,16 +10,17 @@ use Illuminate\Database\Eloquent\Factories\Factory;
  */
 class GroupFactory extends Factory
 {
-    /**
-     * Define the model's default state.
-     *
-     * @return array<string, mixed>
-     */
-    public function definition()
-    {
+  private static $order = 1;
+
+  /**
+   * Define the model's default state.
+   *
+   * @return array<string, mixed>
+   */
+  public function definition()
+  {
         return [
-            'name' => 'Group#'.rand(1,10),
-            'project_id' => '1',
+            'name' => 'Group#'.self::$order++,
         ];
     }
 }
