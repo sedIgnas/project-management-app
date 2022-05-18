@@ -17,9 +17,9 @@
 </head>
 
 <body>
-  {{-- main page container --}}
-  <div class="container">
-    {{-- @if($isProjAvail === true) --}}
+    {{-- main page container --}}
+    <div class="container">
+
         {{-- Project overview --}}
         <div class="m-5">
             <h4>Project status</h4>
@@ -41,90 +41,91 @@
                     </tr>
                 </thead>
                 <tbody>
-                  @foreach($students as $student)
+                    @foreach ($students as $student)
+                        <tr>
+                            <td>{{ $student->first_name }} {{ $student->last_name }}</td>
+                            <td>
+                                @if ($student->in_group === 1)
+                                    {{ $student->group->name }}
+                                @else
+                                    -
+                                @endif
+                            </td>
+                            <td>
+                                <form action="{{ route('students.destroy', $student) }}" method="post">
+                                    @csrf
+                                    @method('delete')
+                                    <input type="submit" value="Delete" class="btn btn-light">
+                                </form>
+                            </td>
+                        </tr>
+                    @endforeach
                     <tr>
-                        <td>{{ $student->first_name }} {{ $student->last_name }}</td>
-                        <td>
-                          @if($student->in_group === 1)
-                            {{ $student->group->name }}
-                          @else
-                            -
-                          @endif
-                        </td>
-                        <td>
-                          <form action="{{ route('students.destroy', $student) }}" method="post">
+                        <form action="{{ route('student.store') }}" method="POST">
                             @csrf
-                            @method('delete')
-                            <input type="submit" value="Delete" class="btn btn-light">
-                          </form>
-                        </td>
+                            @method('POST')
+                            <td>
+                                <input type="text" name="firstName" id="firstName" placeholder="First name">
+                                <input type="text" name="lastName" id="lastName" placeholder="Last name">
+                            </td>
+                            <td>
+                                <select name="groupId" id="groupId">
+                                    <option id="groupId" name="groupId" value="{{ null }}">-</option>
+                                    @foreach ($groups as $group)
+                                        <option id="groupId" name="groupId" value="{{ $group->id }}">
+                                            {{ $group->name }}</option>
+                                    @endforeach
+                                </select>
+                            </td>
+                            <td>
+                                <input type="submit" value="Add new Student" class="btn btn-light">
+                            </td>
+                        </form>
                     </tr>
-                  @endforeach
-                  <tr>
-                    <form action="{{ route('student.store') }}" method="POST">
-                      @csrf
-                      @method('POST')
-                      <td>
-                        <input type="text" name="firstName" id="firstName" placeholder="First name">
-                        <input type="text" name="lastName" id="lastName" placeholder="Last name">
-                      </td>
-                      <td>
-                        <select name="groupId" id="groupId">
-                          <option id="groupId" name="groupId" value="{{ null }}">-</option>
-                          @foreach($groups as $group)
-                          <option id="groupId" name="groupId" value="{{ $group->id }}">{{ $group->name }}</option>
-                          @endforeach
-                        </select>
-                      </td>
-                      <td>
-                        <input type="submit" value="Add new Student" class="btn btn-light">
-                      </td>
-                    </form>
-                  </tr>
                 </tbody>
-              </table>
+            </table>
         </div>
 
         {{-- Student groups --}}
         <div class="row m-auto w-100 text-center">
-
-          @foreach($groups as $group)
-            <div class="col-6 mt-5">
-                <table class="table table-bordered">
-                    <thead>
-                        <tr>
-                            <th>{{ $group->name }}</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                      @foreach($students as $student)
-                        @if ($student->group_id === $group->id)
+            @foreach ($groups as $group)
+                <div class="col-6 mt-5">
+                    <table class="table table-bordered">
+                        <thead>
                             <tr>
-                              <td>{{ $student->name }} {{ $student->last_name }}</td>
+                                <th>{{ $group->name }}</th>
                             </tr>
-                        @endif 
-                        @endforeach
-                        <tr>
-                            <td>
-                                <select class="custom-select">
-                                    <option selected>Assign student</option>
-                                    <option value="1">Student 1</option>
-                                    <option value="2">Student 2</option>
-                                    <option value="3">Student 3</option>
-                                </select>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
+                        </thead>
+                        <tbody>
+                            @foreach ($students as $student)
+                                @if ($student->group_id === $group->id)
+                                    <tr>
+                                        <td>{{ $student->first_name }} {{ $student->last_name }}</td>
+                                    </tr>
+                                @endif
+                            @endforeach
+                            <tr>
+                                <td>
+                                <form action="{{ route('students.update', $student, $group) }}" method="put">
+                                  @csrf
+                                  @method('PUT')
+                                    <select class="custom-select w-50">
+                                        <option selected>Assign student</option>
+                                        @foreach ($students as $student)
+                                        @if ($student->in_group === 0)
+                                        <option name="inGroup" value="{{ $student->id }}, {{ $group->id }}">{{ $student->first_name }} {{ $student->last_name }}</option>
+                                        @endif
+                                        @endforeach
+                                    </select>
+                                    <input type="submit" value="Assign" class="btn btn-info">
+                                </form>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             @endforeach
         </div>
-        {{-- @else
-        <div class="container text-center mt-5 mx-auto">
-          <h1>Please create a project</h1>
-          <a class="btn btn-danger text-reset" href="{{ route('home') }}">Create project now</a>
-        </div>
-        @endif --}}
     </div>
 </body>
 
