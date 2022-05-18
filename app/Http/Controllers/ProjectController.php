@@ -31,9 +31,6 @@ class ProjectController extends Controller
   public function index()
   {
     
-    // $students = Http::get('http://localhost:8000/api/students');
-    // dd($students);
-
       $students = $this->student->all();
       $groups = $this->group->all();
       $project = $this->project->orderBy('id', 'desc')->first();

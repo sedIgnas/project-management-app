@@ -1,13 +1,10 @@
 <?php
 
-namespace App\Http\Controllers\Api;
+namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
-use App\Http\Resources\StudentResource;
-use App\Models\Student;
 use Illuminate\Http\Request;
 
-class StudentController extends Controller
+class GroupController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -16,8 +13,7 @@ class StudentController extends Controller
      */
     public function index()
     {
-        $students = Student::all();
-        return StudentResource::collection($students);
+        //
     }
 
     /**
@@ -38,18 +34,16 @@ class StudentController extends Controller
      */
     public function store(Request $request)
     {
-      $students = Student::create($request->all());
-        
-      return new StudentResource($students);
+        //
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Student  $student
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(Student $student)
+    public function show($id)
     {
         //
     }
@@ -57,10 +51,10 @@ class StudentController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\Student  $student
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit(Student $student)
+    public function edit($id)
     {
         //
     }
@@ -69,25 +63,22 @@ class StudentController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Student  $student
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Student $student)
+    public function update(Request $request, $id)
     {
-      $student->update($request->all());
-
-      return new StudentResource($student);
+        //
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Student  $student
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Student $student)
+    public function destroy($id)
     {
-      $student->delete();
-      return redirect(route('project.index'));
+        //
     }
 }

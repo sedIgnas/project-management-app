@@ -76,7 +76,9 @@ class StudentController extends Controller
    */
   public function update(Request $request, $id)
   {
-    //
+    $student = Student::where('id', $id);
+
+    // $student = $request->input('in')
   }
 
   /**
