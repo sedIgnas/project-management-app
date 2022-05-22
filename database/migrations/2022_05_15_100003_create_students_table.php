@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('first_name');
             $table->string('last_name');
             $table->boolean('in_group');
-            $table->foreignId('group_id')->nullable()->constrained()->onDelete('cascade');
+            $table->foreignId('group_id')->nullable()->onDelete('cascade');
         });
     }
 
