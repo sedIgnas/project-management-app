@@ -58,13 +58,15 @@ a single group. In case the group is full, information text should be visible to
 Start the local php server using earlier instructions and open the application in your browser. 
 
 ```
-First, in homepage you can create a project to manage. Input project name, number of groups you want created and
-maximum number of students per group. Application will do simple validation checks, so user should not be able
-to enter incorrect data into group count and size inputs. After successful creation of the projet, groups will
-be initialized automatically, depending on what was input in 'Group size' and 'Maximum students in group' fields.
-Now you may assign students to groups, add new students, assign them to group upon creation. If you press back,
-you will be returned to homepage. From here you can click to get back into project or create a new one. Upon creation
-of new project, old one will be removed from the database along with students and groups. Students are created
-with laravel in-built factory, so they will always be generated randomly.
+First, in homepage you can create a project to manage. Input project name, number of groups
+you want created and maximum number of students per group. Application will do simple validation
+checks, so user should not be able to enter incorrect data into group count and size inputs.
+After successful creation of the projet, groups will be initialized automatically, depending
+on what was input in 'Group size' and 'Maximum students in group' fields. Now you may assign
+students to groups, add new students, assign them to group upon creation. If you press back,
+you will be returned to homepage. From here you can click to get back into project or create a
+new one. Upon creation of new project, old one will be removed from the database along with
+students and groups. Students are created with laravel in-built factory, so they will always
+be generated randomly.
 ```
 
