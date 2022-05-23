@@ -19,8 +19,8 @@ class StudentFactory extends Factory
         return [
             'first_name' => $this->faker->firstName(),
             'last_name' => $this->faker->lastName(),
-            'in_group' => 1,
-            'group_id'=> rand(1,2)
+            'in_group' => 0,
+            'group_id'=> null
         ];
     }
 }
