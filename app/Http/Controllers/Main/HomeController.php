@@ -2,16 +2,21 @@
 
 namespace App\Http\Controllers\Main;
 
-use App\Models\Group;
 use App\Models\Project;
-use App\Models\Student;
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
 class HomeController extends Controller
 {
-    public function index()
-    {
-      return view('index');
-    }
+  private Project $project;
+
+  public function __construct(Project $project)
+  {
+    $this->project = $project;
+  }
+
+  public function index()
+  {
+    $project = $this->project->first();
+    return view('index', compact('project'));
+  }
 }
