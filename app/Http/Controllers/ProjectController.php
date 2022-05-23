@@ -2,27 +2,40 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\Api\StudentController;
+use App\Http\Requests\PostProjectRequest;
 use App\Models\Group;
 use App\Models\Project;
 use App\Models\Student;
-use Illuminate\Database\Eloquent\Model;
+use App\Repositories\Group\GroupRepository;
+use App\Repositories\Project\ProjectRepository;
+use App\Repositories\Student\StudentRepository;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Http;
 
 class ProjectController extends Controller
 {
   private Project $project;
   private Group $group;
   private Student $student;
+  private StudentRepository $studentRepository;
+  private GroupRepository $groupRepository;
+  private ProjectRepository $projectRepository;
 
-  public function __construct(Project $project, Group $group, Student $student)
-  {
-    $this->isProjectCreated = false;
+  public function __construct(
+    Project $project,
+    Group $group,
+    Student $student,
+    StudentRepository $studentRepository,
+    GroupRepository $groupRepository,
+    ProjectRepository $projectRepository
+  ) {
     $this->project = $project;
     $this->group = $group;
     $this->student = $student;
+    $this->studentRepository = $studentRepository;
+    $this->groupRepository = $groupRepository;
+    $this->projectRepository = $projectRepository;
   }
+
   /**
    * Display a listing of the resource.
    *
@@ -30,32 +43,21 @@ class ProjectController extends Controller
    */
   public function index()
   {
-    
-      $students = $this->student->all();
-      $groups = $this->group->all();
-      $project = $this->project->orderBy('id', 'desc')->first();
+    $students = $this->studentRepository->getAllStudents();
+    $groups = $this->groupRepository->getAllGroups();
+    $project = $this->projectRepository->getFirstProject();
+    $studentsIngroup = $this->studentRepository->getInGroupStudents();
+    $studentsPerGroup = studentsPerGroup($students, $groups);
 
-    return view('project', compact('groups', 'students', 'project'));
+    return view('project', compact('groups', 'students', 'project', 'studentsPerGroup'));
   }
 
-
-  public function initializeProject($project)
+  private function initializeProject()
   {
-    $this->group->initializeGroups($project->group_count);
-    $this->student->initializeStudents($project->group_size, $project->group_count);
+    $this->group->initializeGroups($this->project->group_count);
+    $this->student->initializeStudents($this->project->group_size, $this->project->group_count);
 
     return redirect(route('project.index'));
-  }
-
-
-  /**
-   * Show the form for creating a new resource.
-   *
-   * @return \Illuminate\Http\Response
-   */
-  public function create()
-  {
-    //
   }
 
   /**
@@ -64,50 +66,18 @@ class ProjectController extends Controller
    * @param  \Illuminate\Http\Request  $request
    * @return \Illuminate\Http\Response
    */
-  public function store(Request $request)
+  public function store(PostProjectRequest $request)
   {
-    // dd($this->project);
+    if ($this->project) {
+      $this->destroy();
+    }
+
     $this->project->name = $request->input('projectName');
     $this->project->group_size = $request->input('groupSize');
-    $this->project->group_count =  $request->input('groupCount');
-
+    $this->project->group_count = $request->input('groupCount');
     $this->project->save();
 
-    return $this->initializeProject($this->project);
-  }
-
-  /**
-   * Display the specified resource.
-   *
-   * @param  int  $id
-   * @return \Illuminate\Http\Response
-   */
-  public function show($id)
-  {
-    //
-  }
-
-  /**
-   * Show the form for editing the specified resource.
-   *
-   * @param  int  $id
-   * @return \Illuminate\Http\Response
-   */
-  public function edit($id)
-  {
-    //
-  }
-
-  /**
-   * Update the specified resource in storage.
-   *
-   * @param  \Illuminate\Http\Request  $request
-   * @param  int  $id
-   * @return \Illuminate\Http\Response
-   */
-  public function update(Request $request, $id)
-  {
-    //
+    return $this->initializeProject();
   }
 
   /**
@@ -118,5 +88,8 @@ class ProjectController extends Controller
    */
   public function destroy()
   {
+    $this->student->truncate();
+    $this->group->truncate();
+    $this->project->truncate();
   }
 }
