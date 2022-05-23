@@ -1,26 +1,12 @@
-<!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-
-    <title>Project manager</title>
-
-    <!-- Bootstrap -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css"
-        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-
-    <!-- Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
-
-</head>
-
-<body>
+@extends('layout.app')
+@section('content')
     {{-- main page container --}}
     <div class="container">
 
         {{-- Project overview --}}
+        <div class="float-right">
+            <a href="{{ route('home') }}" class="btn btn-danger">Back</a>
+        </div>
         <div class="m-5">
             <h4>Project status</h4>
             <div class="ml-3">
@@ -48,7 +34,24 @@
                                 @if ($student->in_group === 1)
                                     {{ $student->group->name }}
                                 @else
-                                    -
+                                    <form action="{{ route('students.update', $student->id) }}" method="POST">
+                                        @csrf
+                                        @method('PUT')
+                                        <select name="groupId" id="studentList">
+                                            <option value="null"> None </option>
+                                            @foreach ($groups as $group)
+                                                @if ($project->group_size === $studentsPerGroup[$group->id - 1])
+                                                    <option class="w-75" value="{{ $group->id }}">
+                                                        {{ $group->name }} is Full </option>
+                                                @else
+                                                    <option class="w-75" value="{{ $group->id }}">
+                                                        {{ $group->name }} </option>
+                                                @endif
+                                            @endforeach
+                                            <input name="id" type="hidden" value="{{ $student->id }}">
+                                            <input type="submit" value="Set" class="btn mx-1 btn-success">
+                                        </select>
+                                    </form>
                                 @endif
                             </td>
                             <td>
@@ -61,7 +64,7 @@
                         </tr>
                     @endforeach
                     <tr>
-                        <form action="{{ route('student.store') }}" method="POST">
+                        <form action="{{ route('students.store') }}" method="POST">
                             @csrf
                             @method('POST')
                             <td>
@@ -73,7 +76,12 @@
                                     <option id="groupId" name="groupId" value="{{ null }}">-</option>
                                     @foreach ($groups as $group)
                                         <option id="groupId" name="groupId" value="{{ $group->id }}">
-                                            {{ $group->name }}</option>
+                                            @if ($project->group_size === $studentsPerGroup[$group->id - 1])
+                                                <p>{{ $group->name }} is full</p>
+                                            @else
+                                                {{ $group->name }}
+                                            @endif
+                                        </option>
                                     @endforeach
                                 </select>
                             </td>
@@ -93,7 +101,14 @@
                     <table class="table table-bordered">
                         <thead>
                             <tr>
-                                <th>{{ $group->name }}</th>
+                                <th>
+                                    @if ($project->group_size <= $studentsPerGroup[$group->id - 1])
+                                        <p>Group is full</p>
+                                        {{ $group->name }}
+                                    @else
+                                        {{ $group->name }}
+                                    @endif
+                                </th>
                             </tr>
                         </thead>
                         <tbody>
@@ -104,29 +119,10 @@
                                     </tr>
                                 @endif
                             @endforeach
-                            <tr>
-                                <td>
-                                <form action="{{ route('students.update', $student, $group) }}" method="put">
-                                  @csrf
-                                  @method('PUT')
-                                    <select class="custom-select w-50">
-                                        <option selected>Assign student</option>
-                                        @foreach ($students as $student)
-                                        @if ($student->in_group === 0)
-                                        <option name="inGroup" value="{{ $student->id }}, {{ $group->id }}">{{ $student->first_name }} {{ $student->last_name }}</option>
-                                        @endif
-                                        @endforeach
-                                    </select>
-                                    <input type="submit" value="Assign" class="btn btn-info">
-                                </form>
-                                </td>
-                            </tr>
                         </tbody>
                     </table>
                 </div>
             @endforeach
         </div>
     </div>
-</body>
-
-</html>
+@endsection
