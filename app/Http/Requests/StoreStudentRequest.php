@@ -24,9 +24,7 @@ class StoreStudentRequest extends FormRequest
     public function rules()
     {
         return [
-            'firstName' => 'required|alpha',
-            'lastName' => 'required|alpha',
-            'inGroup' => 'boolean',
+
         ];
     }
 }
